@@ -52,7 +52,6 @@
         <button class="filter-btn" id="sort-cheap">価格が安い順</button>
         <button class="filter-btn" id="sort-stars">ほしい度が高い順</button>
         <button class="filter-btn" id="filter-not-yet">GETしてないもの</button>
-        <button class="filter-btn" id="share-btn" style="background:#00ffcc; color:#111; font-weight:bold; margin-left:auto;">🔗 共有する</button>
     </div>
 
     <div class="grid" id="zukan-grid"></div>
@@ -209,35 +208,6 @@
             currentFilter = 'not-yet';
             displayItems(itemData);
         });
-
-                // 🔗 欲しいものリストの共有機能
-        document.getElementById('share-btn').addEventListener('click', () => {
-            // 現在のフィルター状態（all, not-yetなど）をURLにくっつける
-            const shareUrl = new URL(window.location.href);
-            shareUrl.searchParams.set('view', currentFilter);
-            
-            // クリップボードにURLをコピーする
-            navigator.clipboard.writeText(shareUrl.href).then(() => {
-                alert('「俺の欲しいものリストはこれで済み」のリンクをコピーしました！そのままLINEやSNSに貼り付けて共有してね！');
-            }).catch(() => {
-                alert('コピーに失敗しました。URL欄の文字をそのままコピーしてください。');
-            });
-        });
-
-        // 💡 共有されたリンクを開いたときに、自動でそのフィルターにする処理
-        window.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const view = params.get('view');
-            if (view === 'not-yet') {
-                currentFilter = 'not-yet';
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                const btn = document.getElementById('filter-not-yet');
-                if (btn) btn.classList.add('active');
-                // 読み込み完了後に画面を更新するために少しだけ待つ
-                setTimeout(() => displayItems(itemData), 100);
-            }
-        });
-
         
     </script>
     

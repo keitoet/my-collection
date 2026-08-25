@@ -43,6 +43,9 @@
         .title { line-height: 1.5; display: inline-block; width: 100%; vertical-align: middle; }
 
     </style>
+    <script src="https://cloudflare.com"></script>
+
+    
 </head>
 <body>
 
@@ -52,6 +55,8 @@
         <button class="filter-btn" id="sort-cheap">価格が安い順</button>
         <button class="filter-btn" id="sort-stars">ほしい度が高い順</button>
         <button class="filter-btn" id="filter-not-yet">GETしてないもの</button>
+                <!-- 👈 これを追加 -->
+        <button class="filter-btn" id="capture-btn" style="background:#00ffcc; color:#111; font-weight:bold; margin-left:auto;">📸 画像で保存</button>
     </div>
 
     <div class="grid" id="zukan-grid"></div>
@@ -208,6 +213,41 @@
             currentFilter = 'not-yet';
             displayItems(itemData);
         });
+
+                // 📸 画面を画像（PNG）にしてダウンロードする機能
+        document.getElementById('capture-btn').addEventListener('click', () => {
+            // ボタンやヘッダーなど、画像に写したくないものを一時的に隠す
+            const filterContainer = document.querySelector('.filter-container');
+            const h1Title = document.querySelector('h1');
+            if (filterContainer) filterContainer.style.display = 'none';
+            if (h1Title) h1Title.style.display = 'none';
+
+            // カードが並んでいる「grid」エリアだけをきれいに撮影する
+            const gridArea = document.getElementById('zukan-grid');
+            
+            // 撮影を実行
+            html2canvas(gridArea, {
+                useCORS: true, // ネット上の画像（ピアノやパンツ）を許可
+                backgroundColor: '#121212', // 背景を黒にする
+                scale: 2 // 画質を2倍にしてきれいに
+            }).then(canvas => {
+                // 隠していたボタンとタイトルを元に戻す
+                if (filterContainer) filterContainer.style.display = 'flex';
+                if (h1Title) h1Title.style.display = 'block';
+
+                // 画像ファイル（PNG）に変換して自動ダウンロード
+                const link = document.createElement('a');
+                link.download = '俺の欲しいものリストはこれで済み.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                // 万が一エラーが起きたら元に戻す
+                if (filterContainer) filterContainer.style.display = 'flex';
+                if (h1Title) h1Title.style.display = 'block';
+                alert('画像の作成に失敗しました。外部サイトの画像がブロックされている可能性があります。');
+            });
+        });
+
         
     </script>
     

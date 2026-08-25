@@ -22,36 +22,67 @@
 
     <h1>ほしいもの図鑑</h1>
 
+    <div style="text-align: center; margin-bottom: 20px;">
+        <button id="sort-cheap" style="padding: 8px 16px; background: #2a2a2a; color: #fff; border: 1px solid #333; border-radius: 5px; cursor: pointer; margin: 0 5px;">価格の安い順</button>
+        <button id="sort-stars" style="padding: 8px 16px; background: #2a2a2a; color: #fff; border: 1px solid #333; border-radius: 5px; cursor: pointer; margin: 0 5px;">ほしい度が高い順</button>
+    </div>
+
     <div class="grid" id="zukan-grid"></div>
 
     <script>
+        let itemData = [];
+
+        function displayItems(items) {
+            const grid = document.getElementById('zukan-grid');
+            grid.innerHTML = '';
+            
+            items.forEach(item => {
+                const imgContent = item.img ? `<img src="${item.img}" class="card-img" alt="${item.title}">` : `<div class="card-img">NO IMAGE</div>`;
+                
+                const cardHTML = `
+                    <div class="card">
+                        ${imgContent}
+                        <div class="card-content">
+                            <div class="title">${item.title}</div>
+                            <div class="info">価格: <span class="price">${item.price}</span></div>
+                            <div class="info">ほしい度: <span class="stars">${item.stars}</span></div>
+                            <div class="info">メモ: ${item.memo}</div>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
 
         fetch('data.json')
             .then(response => response.json())
             .then(data => {
-                const grid = document.getElementById('zukan-grid');
-                
-                data.forEach(item => {
-                    const imgContent = item.img ? `<img src="${item.img}" class="card-img" alt="${item.title}">` : `<div class="card-img">NO IMAGE</div>`;
-                    
-                    const cardHTML = `
-                        <div class="card">
-                            ${imgContent}
-                            <div class="card-content">
-                                <div class="title">${item.title}</div>
-                                <div class="info">価格: <span class="price">${item.price}</span></div>
-                                <div class="info">ほしい度: <span class="stars">${item.stars}</span></div>
-                                <div class="info">メモ: ${item.memo}</div>
-                            </div>
-                        </div>
-                    `;
-                    grid.insertAdjacentHTML('beforeend', cardHTML);
-                });
+                itemData = data;
+                displayItems(itemData);
             })
             .catch(error => {
                 console.error('データの読み込みに失敗しました:', error);
                 document.getElementById('zukan-grid').innerHTML = '<p style="text-align:center; color:red;">JSONデータの読み込みに失敗しました。</p>';
             });
+
+        function getPriceNumber(priceStr) {
+            return Number(priceStr.replace(/[^0-9]/g, ''));
+        }
+
+        function getStarCount(starStr) {
+            return (starStr.match(/★/g) || []).length;
+        }
+
+        document.getElementById('sort-cheap').addEventListener('click', () => {
+            const sorted = [...itemData].sort((a, b) => getPriceNumber(a.price) - getPriceNumber(b.price));
+            displayItems(sorted);
+        });
+
+        document.getElementById('sort-stars').addEventListener('click', () => {
+            const sorted = [...itemData].sort((a, b) => getStarCount(b.stars) - getStarCount(a.stars));
+            displayItems(sorted);
+        });
     </script>
+
 </body>
 </html>

@@ -17,16 +17,14 @@
         .price { color: #ff5555; font-weight: bold; }
         .stars { color: #ffcc00; }
 
-        .get-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); color: rgba(0, 255, 204, 0.8); font-size: 48px; font-weight: bold; border: 4px solid rgba(0, 255, 204, 0.8); padding: 5px 15px; border-radius: 10px; pointer-events: none; letter-spacing: 2px; z-index: 10; text-shadow: 2px 2px 2px rgba(0,0,0,0.6), -2px -2px 2px rgba(0,0,0,0.6), 2px -2px 2px rgba(0,0,0,0.6), -2px 2px 2px rgba(0,0,0,0.6); box-shadow: 0 0 10px rgba(0,0,0,0.5); background-color: rgba(0,0,0,0.2); }
-        .img-container { position: relative; width: 100%; }
-        .card { cursor: pointer; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); z-index: 100; justify-content: center; align-items: center; }
-        .modal-content { background-color: #1e1e1e; border: 2px solid #333; border-radius: 15px; width: 90%; max-width: 500px; overflow: hidden; position: relative; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 30px; color: #aaa; cursor: pointer; z-index: 10; }
-        .close-btn:hover { color: #fff; }
-        .buy-btn { display: inline-block; width: 100%; text-align: center; box-sizing: border-box; background-color: #00ffcc; color: #111; font-weight: bold; padding: 12px; border-radius: 8px; text-decoration: none; margin-top: 15px; transition: background 0.2s; }
-        .buy-btn:hover { background-color: #00ccaa; }
+        .get-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); color: rgba(0, 255, 204, 0.8); font-size: 38px; font-weight: bold; border: 4px solid rgba(0, 255, 204, 0.8); padding: 5px 15px; border-radius: 10px; pointer-events: none; letter-spacing: 2px; z-index: 10; text-shadow: 2px 2px 2px rgba(0,0,0,0.6), -2px -2px 2px rgba(0,0,0,0.6); box-shadow: 0 0 10px rgba(0,0,0,0.5); background-color: rgba(0,0,0,0.2); text-align: center; line-height: 1.2; animation: stamp 0.2s ease-out forwards; }
+        .get-date { font-size: 14px; display: block; font-weight: normal; margin-top: 2px; }
+        @keyframes stamp { 0% { opacity: 0; transform: translate(-50%, -50%) rotate(-15deg) scale(3); } 100% { opacity: 1; transform: translate(-50%, -50%) rotate(-15deg) scale(1); } }
+        .action-btn { display: inline-block; width: 100%; text-align: center; box-sizing: border-box; background-color: #ff4757; color: #fff; font-weight: bold; padding: 12px; border-radius: 8px; text-decoration: none; margin-top: 15px; border: none; cursor: pointer; font-size: 16px; }
+        .action-btn.already-get { background-color: #57606f; cursor: not-allowed; }
+        .filter-container { margin-bottom: 20px; display: flex; gap: 10px; }
+        .filter-btn { background: #2f3542; color: #fff; border: 1px solid #57606f; padding: 8px 16px; border-radius: 20px; cursor: pointer; }
+        .filter-btn.active { background: #00ffcc; color: #111; font-weight: bold; }
 
     </style>
 </head>
@@ -34,9 +32,10 @@
 
     <h1>ほしいもの図鑑</h1>
     
-    <div style="text-align: center; margin-bottom: 20px;">
-        <button id="sort-cheap" style="height: 38px; padding: 0 16px; line-height: 36px; background: #2a2a2a; color: #fff; border: 1px solid #333; border-radius: 5px; cursor: pointer; margin: 0 5px; font-size: 14px; box-sizing: border-box;">価格の安い順</button>
-        <button id="sort-stars" style="height: 38px; padding: 0 16px; line-height: 36px; background: #2a2a2a; color: #fff; border: 1px solid #333; border-radius: 5px; cursor: pointer; margin: 0 5px; font-size: 14px; box-sizing: border-box;">ほしい度が高い順</button>
+    <div class="filter-container">
+        <button class="filter-btn active" id="filter-all">すべて</button>
+        <button class="filter-btn" id="filter-got">GET済みコレクション</button>
+        <button class="filter-btn" id="filter-not-yet">未GET</button>
     </div>
 
     <div class="grid" id="zukan-grid"></div>
@@ -51,18 +50,31 @@
 
     <script>
         let itemData = [];
+        let currentFilter = 'all';
+
+        let savedGets = JSON.parse(localStorage.getItem('zukan_get_dates')) || {};
 
         function displayItems(items) {
             const grid = document.getElementById('zukan-grid');
             grid.innerHTML = '';
             
-            items.forEach((item, index) => {
+            const filteredItems = items.filter(item => {
+                const isGot = !!savedGets[item.title];
+                if (currentFilter === 'got') return isGot;
+                if (currentFilter === 'not-yet') return !isGot;
+                return true;
+            });
+
+            filteredItems.forEach((item) => {
                 const imgContent = item.img ? `<img src="${item.img}" class="card-img" alt="${item.title}">` : `<div class="card-img">NO IMAGE</div>`;
                 
-                const getOverlay = item.get ? `<div class="get-overlay">GET!</div>` : '';
+                const getInfo = savedGets[item.title];
+                const getOverlay = getInfo ? `<div class="get-overlay">GET!<span class="get-date">${getInfo.date}</span></div>` : '';
                 
+                const trueIndex = itemData.findIndex(i => i.title === item.title);
+
                 const cardHTML = `
-                    <div class="card" onclick="openModal(${index})">
+                    <div class="card" onclick="openModal(${trueIndex})">
                         <div class="img-container">
                             ${imgContent}
                             ${getOverlay}
@@ -90,36 +102,27 @@
                 document.getElementById('zukan-grid').innerHTML = '<p style="text-align:center; color:red;">JSONデータの読み込みに失敗しました。</p>';
             });
 
-        function getPriceNumber(priceStr) {
-            return Number(priceStr.replace(/[^0-9]/g, ''));
-        }
-
-        function getStarCount(starStr) {
-            return (starStr.match(/★/g) || []).length;
-        }
-
-        document.getElementById('sort-cheap').addEventListener('click', () => {
-            const sorted = [...itemData].sort((a, b) => getPriceNumber(a.price) - getPriceNumber(b.price));
-            displayItems(sorted);
-        });
-
-        document.getElementById('sort-stars').addEventListener('click', () => {
-            const sorted = [...itemData].sort((a, b) => getStarCount(b.stars) - getStarCount(a.stars));
-            displayItems(sorted);
-        });
-
         function openModal(index) {
             const item = itemData[index];
             const modal = document.getElementById('detail-modal');
             const modalBody = document.getElementById('modal-body');
             
             const imgContent = item.img ? `<img src="${item.img}" style="width:100%; height:auto; max-height:300px; object-fit:cover;" alt="${item.title}">` : `<div class="card-img">NO IMAGE</div>`;
-            const getOverlay = item.get ? `<div class="get-overlay" style="font-size:64px;">GET!</div>` : '';
+            
+            const getInfo = savedGets[item.title];
+            const getOverlay = getInfo ? `<div class="get-overlay" style="font-size:54px;">GET!<span class="get-date" style="font-size:18px;">${getInfo.date}</span></div>` : '';
+
+            let getButtonHTML = '';
+            if (getInfo) {
+                getButtonHTML = `<button class="action-btn already-get" disabled>GET済みです</button>`;
+            } else {
+                getButtonHTML = `<button class="action-btn" onclick="clickGet(${index})">このアイテムをGETする！</button>`;
+            }
 
             const linkButton = item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="buy-btn">商品ページを見に行く ➡️</a>` : '';
 
             modalBody.innerHTML = `
-                <div class="img-container">
+                <div class="img-container" id="modal-img-container">
                     ${imgContent}
                     ${getOverlay}
                 </div>
@@ -129,25 +132,62 @@
                     <p style="font-size:16px;">ほしい度: <span class="stars">${item.stars}</span></p>
                     <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
                     <p style="font-size:15px; color:#ccc; line-height:1.6;"><strong>メモ:</strong><br>${item.memo}</p>
+                    ${getButtonHTML}
                     ${linkButton}
                 </div>
             `;
-            
             modal.style.display = 'flex';
         }
 
-        const modal = document.getElementById('detail-modal');
+        window.clickGet = function(index) {
+            const item = itemData[index];
+            if (savedGets[item.title]) return;
 
-        document.getElementById('modal-close').addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
+            const today = new Date();
+            const dateStr = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
 
-        window.addEventListener('click', (e) => {
-            if (e.target == modal) {
-                modal.style.display = 'none';
+            savedGets[item.title] = { date: dateStr };
+            localStorage.setItem('zukan_get_dates', JSON.stringify(savedGets));
+
+            const container = document.getElementById('modal-img-container');
+            container.insertAdjacentHTML('beforeend', `<div class="get-overlay" style="font-size:54px;">GET!<span class="get-date" style="font-size:18px;">${dateStr}</span></div>`);
+
+            const btn = document.querySelector('.action-btn');
+            if (btn) {
+                btn.className = 'action-btn already-get';
+                btn.innerText = 'GET済みです';
+                btn.disabled = true;
             }
-        });
-    </script>
 
+            displayItems(itemData);
+        };
+
+        const modal = document.getElementById('detail-modal');
+        document.getElementById('modal-close').addEventListener('click', () => modal.style.display = 'none');
+        window.addEventListener('click', (e) => { if (e.target == modal) modal.style.display = 'none'; });
+
+        function getPriceNumber(p) { return Number(p.replace(/[^0-9]/g, '')); }
+        function getStarCount(s) { return (s.match(/★/g) || []).length; }
+
+        document.getElementById('sort-cheap').addEventListener('click', () => {
+            itemData.sort((a, b) => getPriceNumber(a.price) - getPriceNumber(b.price));
+            displayItems(itemData);
+        });
+        document.getElementById('sort-stars').addEventListener('click', () => {
+            itemData.sort((a, b) => getStarCount(b.stars) - getStarCount(a.stars));
+            displayItems(itemData);
+        });
+
+        function setFilter(filterType, btnId) {
+            currentFilter = filterType;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(btnId).classList.add('active');
+            displayItems(itemData);
+        }
+        document.getElementById('filter-all').addEventListener('click', () => setFilter('all', 'filter-all'));
+        document.getElementById('filter-got').addEventListener('click', () => setFilter('got', 'filter-got'));
+        document.getElementById('filter-not-yet').addEventListener('click', () => setFilter('not-yet', 'filter-not-yet'));
+    </script>
+    
 </body>
 </html>

@@ -25,6 +25,8 @@
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 30px; color: #aaa; cursor: pointer; z-index: 10; }
         .close-btn:hover { color: #fff; }
+        .buy-btn { display: inline-block; width: 100%; text-align: center; box-sizing: border-box; background-color: #00ffcc; color: #111; font-weight: bold; padding: 12px; border-radius: 8px; text-decoration: none; margin-top: 15px; transition: background 0.2s; }
+        .buy-btn:hover { background-color: #00ccaa; }
 
     </style>
 </head>
@@ -114,6 +116,8 @@
             const imgContent = item.img ? `<img src="${item.img}" style="width:100%; height:auto; max-height:300px; object-fit:cover;" alt="${item.title}">` : `<div class="card-img">NO IMAGE</div>`;
             const getOverlay = item.get ? `<div class="get-overlay" style="font-size:64px;">GET!</div>` : '';
 
+            const linkButton = item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="buy-btn">商品ページを見に行く ➡️</a>` : '';
+
             modalBody.innerHTML = `
                 <div class="img-container">
                     ${imgContent}
@@ -125,6 +129,7 @@
                     <p style="font-size:16px;">ほしい度: <span class="stars">${item.stars}</span></p>
                     <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
                     <p style="font-size:15px; color:#ccc; line-height:1.6;"><strong>メモ:</strong><br>${item.memo}</p>
+                    ${linkButton}
                 </div>
             `;
             

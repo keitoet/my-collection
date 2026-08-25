@@ -52,6 +52,7 @@
         <button class="filter-btn active" id="filter-all">すべて</button>
         <button class="filter-btn" id="filter-got">GET済みコレクション</button>
         <button class="filter-btn" id="filter-not-yet">未GET</button>
+        <button class="filter-btn" id="clear-all-get" style="background:#57606f; margin-left:auto;">全リセット</button>
     </div>
 
     <div class="grid" id="zukan-grid"></div>
@@ -207,6 +208,16 @@
         document.getElementById('filter-all').addEventListener('click', () => setFilter('all', 'filter-all'));
         document.getElementById('filter-got').addEventListener('click', () => setFilter('got', 'filter-got'));
         document.getElementById('filter-not-yet').addEventListener('click', () => setFilter('not-yet', 'filter-not-yet'));
+
+        document.getElementById('clear-all-get').addEventListener('click', () => {
+            if (confirm('ゲットしたスタンプをすべて消して、未GETに戻しますか？')) {
+                localStorage.removeItem('zukan_get_dates');
+                savedGets = {};
+                displayItems(itemData);
+                alert('すべてのスタンプを取り消しました！');
+            }
+        });
+
     </script>
     
 </body>

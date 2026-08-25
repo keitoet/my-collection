@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ほしいもの図鑑</title>
     <style>
+        
         body { background-color: #121212; color: #e0e0e0; font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 20px; }
         h1 { text-align: center; color: #00ffcc; text-shadow: 0 0 10px rgba(0, 255, 204, 0.5); margin-bottom: 30px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
@@ -12,15 +13,11 @@
         .card:hover { transform: translateY(-5px); border-color: #00ffcc; }
         .card-img { width: 100%; height: 180px; background-color: #2a2a2a; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px; object-fit: cover; }
         .img-container { position: relative; width: 100%; height: 180px; background-color: #1a1a1a; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-
-        .card-content { padding: 15px; display: flex; flex-direction: column; min-height: 150px; }
+        .card-content { padding: 15px; }
         .title { font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #fff; }
         .info { font-size: 14px; margin: 5px 0; color: #aaa; }
-        .info:last-child { margin-top: auto; }
-
         .price { color: #ff5555; font-weight: bold; }
         .stars { color: #ffcc00; }
-        .img-container { position: relative; width: 100%; background-color: #1a1a1a; display: flex; justify-content: center; align-items: center; }
         
         .get-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-12deg); color: rgba(0, 255, 204, 0.7); font-size: 56px; font-weight: 900; pointer-events: none; letter-spacing: 4px; z-index: 10; text-align: center; line-height: 0.9; font-family: 'Impact', 'Arial Black', sans-serif; white-space: nowrap; }
         .get-date { font-size: 13px; display: block; font-weight: bold; margin-top: 5px; color: rgba(0, 255, 204, 0.7); letter-spacing: 0px; font-family: 'Helvetica Neue', Arial, sans-serif; }

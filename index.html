@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ほしいもの図鑑</title>
+    <style>
+        body { background-color: #121212; color: #e0e0e0; font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: #00ffcc; text-shadow: 0 0 10px rgba(0, 255, 204, 0.5); margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { background-color: #1e1e1e; border: 1px solid #333; border-radius: 10px; overflow: hidden; transition: transform 0.2s, border-color 0.2s; }
+        .card:hover { transform: translateY(-5px); border-color: #00ffcc; }
+        .card-img { width: 100%; height: 180px; background-color: #2a2a2a; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px; object-fit: cover; }
+        .card-content { padding: 15px; }
+        .title { font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #fff; }
+        .info { font-size: 14px; margin: 5px 0; color: #aaa; }
+        .price { color: #ff5555; font-weight: bold; }
+        .stars { color: #ffcc00; }
+    </style>
+</head>
+<body>
+
+    <h1>ほしいもの図鑑</h1>
+
+    <div class="grid" id="zukan-grid"></div>
+
+    <script>
+
+        fetch('zukan.json')
+            .then(response => response.json())
+            .then(data => {
+                const grid = document.getElementById('zukan-grid');
+                
+                data.forEach(item => {
+                    const imgContent = item.img ? `<img src="${item.img}" class="card-img" alt="${item.title}">` : `<div class="card-img">NO IMAGE</div>`;
+                    
+                    const cardHTML = `
+                        <div class="card">
+                            ${imgContent}
+                            <div class="card-content">
+                                <div class="title">${item.title}</div>
+                                <div class="info">価格: <span class="price">${item.price}</span></div>
+                                <div class="info">ほしい度: <span class="stars">${item.stars}</span></div>
+                                <div class="info">メモ: ${item.memo}</div>
+                            </div>
+                        </div>
+                    `;
+                    grid.insertAdjacentHTML('beforeend', cardHTML);
+                });
+            })
+            .catch(error => {
+                console.error('データの読み込みに失敗しました:', error);
+                document.getElementById('zukan-grid').innerHTML = '<p style="text-align:center; color:red;">JSONデータの読み込みに失敗しました。</p>';
+            });
+    </script>
+</body>
+</html>

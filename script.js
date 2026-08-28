@@ -1,4 +1,42 @@
 const ITEMS_PER_PAGE = 12;
+let allItemsData = [];
+
+function loadStatusFromJson() {
+    fetch('status.json')
+        .then(response => response.json())
+        .then(data => {
+            const emergencyAlert = document.getElementById('emergencyAlert');
+            if (emergencyAlert && data.alert && data.alert.trim() !== "") {
+                if (data.alertUrl) {
+                    emergencyAlert.innerHTML = `<a href="${data.alertUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${data.alert}</a>`;
+                } else {
+                    emergencyAlert.innerText = data.alert;
+                }
+                emergencyAlert.style.display = "block";
+            } else if (emergencyAlert) {
+                emergencyAlert.style.display = "none";
+            }
+        })
+        .catch(error => console.error('Error loading status:', error));
+}
+
+function loadSharedComponents() {
+    fetch('shared.html')
+        .then(res => res.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            const headerEl = document.querySelector('header');
+            const footerEl = document.querySelector('footer');
+            const sharedHeader = doc.getElementById('commonHeader');
+            const sharedFooter = doc.getElementById('commonFooter');
+
+            if (headerEl && sharedHeader) headerEl.innerHTML = sharedHeader.innerHTML;
+            if (footerEl && sharedFooter) footerEl.innerHTML = sharedFooter.innerHTML;
+        })
+        .catch(error => console.error('Error loading shared components:', error));
+}
 
 function loadPicksFromJson() {
     const grid = document.getElementById('collectionGrid');
@@ -12,6 +50,7 @@ function loadPicksFromJson() {
         .then(response => response.json())
         .then(data => {
             if (!data) return;
+            allItemsData = data;
 
             const totalItems = data.length;
             const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
@@ -20,19 +59,14 @@ function loadPicksFromJson() {
             const endIndex = startIndex + ITEMS_PER_PAGE;
             const pageData = data.slice(startIndex, endIndex);
 
-            grid.innerHTML = pageData.map(item => {
+            grid.innerHTML = pageData.map((item, index) => {
+                const actualIndex = startIndex + index;
                 const imgHtml = item.img && item.img.trim() !== "" 
                     ? `<img src="${item.img}" alt="${item.title}">` 
                     : `<span class="no-img-text">NO IMAGE</span>`;
 
-                const isLink = item.link && item.link.trim() !== "";
-                const tagStart = isLink 
-                    ? `<a href="${item.link}" class="item-card" target="_blank" style="text-decoration: none; color: inherit;">` 
-                    : `<div class="item-card">`;
-                const tagEnd = isLink ? `</a>` : `</div>`;
-
                 return `
-                    ${tagStart}
+                    <div class="item-card" onclick="openItemModal(${actualIndex})">
                         <div class="item-img-box">
                             ${imgHtml}
                         </div>
@@ -44,7 +78,7 @@ function loadPicksFromJson() {
                                 <li>メモ：<span>${item.memo}</span></li>
                             </ul>
                         </div>
-                    ${tagEnd}
+                    </div>
                 `;
             }).join('');
 
@@ -65,4 +99,44 @@ function loadPicksFromJson() {
         .catch(error => console.error('Error loading picks:', error));
 }
 
-window.addEventListener('DOMContentLoaded', loadPicksFromJson);
+function openItemModal(index) {
+    const item = allItemsData[index];
+    if (!item) return;
+
+    const modal = document.getElementById('itemModal');
+    const modalImgBox = document.getElementById('modalImgBox');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDetails = document.getElementById('modalDetails');
+    const modalLinkBtn = document.getElementById('modalLinkBtn');
+
+    const imgHtml = item.img && item.img.trim() !== "" 
+        ? `<img src="${item.img}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;">` 
+        : `<span class="no-img-text">NO IMAGE</span>`;
+    
+    modalImgBox.innerHTML = imgHtml;
+    modalTitle.innerText = item.title;
+    modalDetails.innerHTML = `
+        <li>価格：<span style="color:#1a202c;">${item.price}</span></li>
+        <li>ほしい度：<span class="stars">${item.stars}</span></li>
+        <li>メモ：<span style="color:#1a202c; font-weight:normal;">${item.memo}</span></li>
+    `;
+
+    if (item.link && item.link.trim() !== "") {
+        modalLinkBtn.href = item.link;
+        modalLinkBtn.style.display = "block";
+    } else {
+        modalLinkBtn.style.display = "none";
+    }
+
+    modal.style.display = "flex";
+}
+
+function closeItemModal() {
+    document.getElementById('itemModal').style.display = "none";
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    loadSharedComponents();
+    loadStatusFromJson();
+    loadPicksFromJson();
+});

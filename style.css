@@ -1,21 +1,22 @@
+/* 🤍 PROFILEサイトと完全に統一されたオシャレな白ベースデザイン */
 body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif; background-color: #ffffff; color: #333333; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
 
+/* ヘッダー・フッターの白ベース調整 */
 header, footer { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; }
-header { padding: 25px 40px; }
-header h1 { margin: 0; font-size: 26px; color: #1a202c; letter-spacing: 2px; font-weight: bold; max-width: 1000px; margin: 0 auto; text-align: left; }
+header { padding: 25px 40px; text-align: left; }
+header h1 { margin: 0; font-size: 26px; color: #1a202c; letter-spacing: 2px; font-weight: bold; max-width: 1000px; margin: 0 auto; }
 footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; border-top: 1px solid #e2e8f0; margin-top: auto; }
 
 .main-container { max-width: 1000px; width: 100%; margin: 0 auto; padding: 40px 20px; box-sizing: border-box; }
-
 header a:hover { opacity: 0.7 !important; transition: opacity 0.2s ease !important; }
-
-.breadcrumb { font-size: 13px; color: #718096; margin-bottom: 30px; text-align: left; line-height: 1.6; }
+.breadcrumb { font-size: 13px; color: #718096; margin-bottom: 30px; font-weight: bold; text-align: left; line-height: 1.6; }
 .breadcrumb a { color: #3182ce; text-decoration: none; }
-.breadcrumb a:hover { text-decoration: underline !important; color: #2b6cb0 !important; }
+.breadcrumb a:hover { text-decoration: underline !important; }
 
+/* 🎁 図鑑のカードデザイン設定（パソコン画面で横に4つ並びます） */
 .collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; margin-bottom: 40px; }
-.item-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; }
-.item-card[href]:hover { transform: translateY(-4px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); }
+.item-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+.item-card:hover { transform: translateY(-4px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); }
 .item-img-box { width: 100%; height: 160px; background: #f7fafc; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid #e2e8f0; }
 .item-img-box img { width: 100%; height: 100%; object-fit: cover; }
 .no-img-text { color: #a0aec0; font-size: 13px; font-weight: bold; letter-spacing: 1px; }
@@ -26,6 +27,47 @@ header a:hover { opacity: 0.7 !important; transition: opacity 0.2s ease !importa
 .item-detail-list span { color: #1a202c; }
 .stars { color: #ecc94b; }
 
+/* 🔒 【解決！】前のコードをヒントに、画面の「真ん中」に100%固定させる最強のflexモーダル設定 */
+.qr-modal { 
+    display: none; 
+    position: fixed !important; 
+    top: 0 !important; 
+    left: 0 !important; 
+    width: 100% !important; 
+    height: 100% !important; 
+    background: rgba(0, 0, 0, 0.6) !important; /* 💡 背景をほんのり暗い半透明の膜にします */
+    z-index: 9999 !important; 
+    /* 💡 前のコードの技！これで中の白い箱を画面の「上下左右のど真ん中」に強制ロックします */
+    display: none; 
+    justify-content: center !important; 
+    align-items: center !important; 
+    box-sizing: border-box !important;
+}
+
+/* 📄 ポップアップの中の白いオシャレなボックス */
+.qr-modal-content { 
+    background: #ffffff !important; 
+    padding: 20px !important; 
+    border-radius: 12px !important; 
+    position: relative !important; 
+    max-width: 90% !important; 
+    width: 320px !important; 
+    box-sizing: border-box !important; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important; 
+    margin: auto !important;
+}
+
+/* ❌ 右上のバツボタンの位置調整 */
+.qr-modal-close { position: absolute !important; top: 10px !important; right: 15px !important; font-size: 24px !important; color: #aaa !important; cursor: pointer !important; font-weight: bold !important; }
+
+/* プロフィール共通ボタン（通販リンク用） */
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 10px; color: #4a5568; text-decoration: none; font-weight: bold; border-radius: 6px; transition: all 0.2s; font-size: 14px; background: #f7fafc; border: 1px solid #e2e8f0; box-sizing: border-box; }
+.btn:hover { background: #edf2f7; color: #1a202c; }
+
+/* 📄 13個以上になった時の自動ページボタン */
 .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 30px; margin-bottom: 20px; }
 .page-link { text-decoration: none; padding: 8px 14px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-weight: bold; color: #4a5568; background: #f7fafc; transition: all 0.2s; }
 .page-link:hover, .page-link.current { background: #edf2f7; color: #1a202c; border-color: #cbd5e0; }
+
+/* アラート */
+.emergency-alert { display: none; background-color: #fed7d7; color: #9b2c2c; padding: 12px 20px; font-size: 14px; font-weight: bold; text-align: center; border-bottom: 1px solid #feb2b2; }

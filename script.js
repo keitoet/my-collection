@@ -108,35 +108,36 @@ window.openModal = function(index) {
     if (!item) return;
 
     const modal = document.getElementById('detail-modal');
-    const modalImgBox = document.getElementById('modalImgBox');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDetails = document.getElementById('modalDetails');
+    const modalContent = document.querySelector('.qr-modal-content');
 
     const imgHtml = item.img && item.img.trim() !== "" 
-        ? `<img src="${item.img}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;">` 
+        ? `<img src="${item.img}" alt="${item.title}" style="width:100%; height:100%; object-fit:contain;">` 
         : `<span class="no-img-text">NO IMAGE</span>`;
     
     const getOverlay = item.got === true 
         ? `<div class="get-overlay"><div class="get-inner" style="font-size: 52px;">GET<span class="get-date" style="font-size:14px;">―${item.date}―</span></div></div>` 
         : '';
-    
-    modalImgBox.innerHTML = imgHtml + getOverlay;
-    modalTitle.innerText = item.title;
 
-    modalDetails.innerHTML = `
-        <li>価格：<span style="color:#1a202c;">${item.price}</span></li>
-        <li>ほしい度 : <span class="stars">${item.stars}</span></li>
-        <li>メモ：<span style="color:#1a202c; font-weight:normal;">${item.memo}</span></li>
+    const linkButton = item.link && item.link.trim() !== "" 
+        ? `<a href="${item.link}" target="_blank" class="btn">商品ページを見に行く ➡️</a>` 
+        : '';
+
+    modalContent.innerHTML = `
+        <span class="qr-modal-close" onclick="closeItemModal()">&times;</span>
+        <div class="modal-left-box">
+            ${imgHtml}
+            ${getOverlay}
+        </div>
+        <div class="modal-right-box">
+            <div style="font-size: 22px; font-weight: bold; color: #1a202c; margin-bottom: 15px; line-height: 1.4;">${item.title}</div>
+            <ul style="padding: 0; margin: 0; list-style: none; font-size: 15px; color: #4a5568; font-weight: bold; line-height: 2.2;">
+                <li>価格：<span style="color:#1a202c;">${item.price}</span></li>
+                <li>ほしい度 : <span class="stars">${item.stars}</span></li>
+                <li>メモ：<span style="color:#1a202c; font-weight:normal; display:block; margin-top:4px; line-height:1.6; white-space:pre-wrap;">${item.memo}</span></li>
+            </ul>
+            ${linkButton}
+        </div>
     `;
-
-    const actionArea = document.getElementById('modalActionArea');
-    if (actionArea) {
-        if (item.link && item.link.trim() !== "") {
-            actionArea.innerHTML = `<a href="${item.link}" target="_blank" class="btn" style="width: 100%; text-align: center; background: #3182ce; color: #fff; border-color: #3182ce; margin-top:15px;">商品ページを見に行く ➡️</a>`;
-        } else {
-            actionArea.innerHTML = '';
-        }
-    }
 
     modal.style.display = "flex";
 };

@@ -2,7 +2,7 @@ const ITEMS_PER_PAGE = 12;
 let allItemsData = [];
 
 function loadStatusFromJson() {
-    fetch('status.json')
+    fetch('https://keitoet.github.io/my-profile/')
         .then(response => response.json())
         .then(data => {
             const emergencyAlert = document.getElementById('emergencyAlert');

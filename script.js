@@ -62,10 +62,16 @@ function loadPicksFromJson() {
                     ? `<img src="${item.img}" alt="${item.title}">` 
                     : `<span class="no-img-text">NO IMAGE</span>`;
 
+                // 💡 一覧画面のカードの画像の上にも、JSONのデータから自動で斜めGETスタンプを出現させます！
+                const getOverlay = item.got === true 
+                    ? `<div class="get-overlay">GET<span class="get-date">―${item.date}―</span></div>` 
+                    : '';
+
                 return `
                     <div class="item-card" onclick="openModal(${actualIndex})">
-                        <div class="item-img-box">
+                        <div class="item-img-box" style="position: relative;">
                             ${imgHtml}
+                            ${getOverlay}
                         </div>
                         <div class="item-info">
                             <div class="item-title">${item.title}</div>
@@ -109,30 +115,29 @@ window.openModal = function(index) {
         ? `<img src="${item.img}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;">` 
         : `<span class="no-img-text">NO IMAGE</span>`;
     
-    modalImgBox.innerHTML = imgHtml;
+    // 💡 ポップアップした後の大きな画像の上にも、JSONに書いたお気に入りの斜め日付スタンプを100%自動で流し込みます！
+    const getOverlay = item.got === true 
+        ? `<div class="get-overlay" style="font-size: 52px;">GET<span class="get-date" style="font-size:14px;">―${item.date}―</span></div>` 
+        : '';
+    
+    modalImgBox.innerHTML = imgHtml + getOverlay;
     modalTitle.innerText = item.title;
-
-    const gotStatusHtml = item.got === true
-        ? `<li>状態：<span style="color:#2f855a; background:#c6f6d5; padding:2px 8px; border-radius:12px; font-size:12px; display:inline-block; vertical-align:middle;">🟢 GET済み！</span></li>`
-        : `<li>状態：<span style="color:#9b2c2c; background:#fed7d7; padding:2px 8px; border-radius:12px; font-size:12px; display:inline-block; vertical-align:middle;">🔴 まだ持ってない</span></li>`;
 
     modalDetails.innerHTML = `
         <li>価格：<span style="color:#1a202c;">${item.price}</span></li>
-        <li>ほしい度：<span class="stars">${item.stars}</span></li>
-        ${gotStatusHtml}
+        <li>ほしい度 : <span class="stars">${item.stars}</span></li>
         <li>メモ：<span style="color:#1a202c; font-weight:normal;">${item.memo}</span></li>
     `;
 
     const actionArea = document.getElementById('modalActionArea');
     if (actionArea) {
         if (item.link && item.link.trim() !== "") {
-            actionArea.innerHTML = `<a href="${item.link}" target="_blank" class="btn" style="width: 100%; text-align: center; background: #3182ce; color: #fff; border-color: #3182ce; margin-top:10px;">商品ページを見に行く ➡️</a>`;
+            actionArea.innerHTML = `<a href="${item.link}" target="_blank" class="btn" style="width: 100%; text-align: center; background: #3182ce; color: #fff; border-color: #3182ce; margin-top:15px;">商品ページを見に行く ➡️</a>`;
         } else {
             actionArea.innerHTML = '';
         }
     }
 
-    // 💡 前のコードの技！blockではなく「flex」で開くことで、完全に画面の真ん中に吸い寄せられます！
     modal.style.display = "flex";
 };
 

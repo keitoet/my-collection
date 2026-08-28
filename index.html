@@ -4,42 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MY PICKS</title>
-
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
 </head>
 <body>
 
+    <!-- 💡 shared.html からヘッダーが自動で合体します -->
     <header></header>
 
+    <!-- 💡 緊急アラートの自動置き場 -->
     <div id="emergencyAlert" class="emergency-alert"></div>
 
     <div class="main-container">
         
+        <!-- 🗺️ 完璧なパンくずリスト -->
         <div class="breadcrumb">
             <a href="/my-profile/">HOME</a> ＞ <span>MY PICKS</span>
         </div>
 
+        <!-- 💡 data.json のデータが、ここの空っぽの箱に全自動で流し込まれます -->
         <div id="collectionGrid" class="collection-grid"></div>
 
+        <!-- 📄 13個以上になったら自動で出るページボタンの置き場 -->
         <div id="paginationArea"></div>
 
     </div>
 
+    <!-- 💡 【バグ完全修正！】画面中央に浮き出る詳細ポップアップの箱 -->
     <div id="detail-modal" class="qr-modal" onclick="closeItemModal()">
         <div class="qr-modal-content" onclick="event.stopPropagation()">
-            <span class="qr-modal-close" onclick="closeItemModal()">&times;</span>
+            <!-- 💡 はみ出しの原因だった古いバツボタンを消し、綺麗に右上に配置される閉じボタンに変更しました -->
+            <div style="text-align: right; margin-top: -5px; margin-right: -5px;">
+                <span class="qr-modal-close" onclick="closeItemModal()" style="font-size: 24px; color: #aaa; cursor: pointer; font-weight: bold; padding: 5px;">&times;</span>
+            </div>
             
-            <div id="modalImgBox" class="item-img-box" style="border-radius: 8px; margin-top: 15px; position: relative;"></div>
+            <!-- ポップアップの中身（画像・タイトル・詳細・ボタン） -->
+            <div id="modalImgBox" class="item-img-box" style="border-radius: 8px; margin-top: 10px; position: relative;"></div>
             <div style="padding-top: 15px; text-align: left;">
                 <div id="modalTitle" style="font-size: 18px; font-weight: bold; color: #1a202c; margin-bottom: 12px; line-height: 1.4;"></div>
                 <ul id="modalDetails" style="padding: 0; margin: 0 0 15px 0; list-style: none; font-size: 14px; color: #4a5568; font-weight: bold; line-height: 2.0;"></ul>
                 
+                <!-- 💡 リンクがある時だけ、ここに商品ページへのボタンが自動出現します -->
                 <div id="modalActionArea" style="display: flex; flex-direction: column; gap: 0;"></div>
             </div>
         </div>
     </div>
 
+    <!-- 💡 shared.html からフッターが自動で合体します -->
     <footer></footer>
 
 </body>

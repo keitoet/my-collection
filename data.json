@@ -6,7 +6,8 @@
         "memo": "打鍵感が最高。",
         "img": "https://www.casio.com/content/experience-fragments/casio/ja/product-info/electronic-musical-instruments/Product/p/px/pxs/px_s1100/px-s1100/master/_jcr_content/root/responsivegrid/container_copy_copy_/container_460088996__1906459677/container_693602995/image_copy_copy.casiocoreimg.jpeg/1624321718795/pxs1100-color-we.jpeg",
         "link": "https://pianoplazawebshop.com/maker/casio/pxs1100.html?srsltid=AfmBOopRrnJ1GkH0HvqtUyZMfUyEmUnqiBKn-xlxDbDG-a6QbWCVV_GE",
-        "got": false
+        "got": false,
+        "date": ""
     },
     {
         "title": "UMBRO ボクサーパンツ",
@@ -15,7 +16,8 @@
         "memo": "どこも売り切れのやつ。",
         "img": "https://c.imgz.jp/404/68749404/68749404b_27_d_500.jpg",
         "link": "https://www.wakudoki.ne.jp/productdetail/69ubb081a/2/",
-        "got": false
+        "got": false,
+        "date": ""
     },
     {
         "title": "ネックレス",
@@ -24,7 +26,8 @@
         "memo": "普段使いのネックレス。",
         "img": "",
         "link": "",
-        "got": false
+        "got": false,
+        "date": ""
     },
     {
         "title": "誕生日プレゼント",
@@ -33,7 +36,8 @@
         "memo": "誕生日プレゼントほしい。",
         "img": "",
         "link": "https://www.wakudoki.ne.jp/productdetail/69ubb081a/2/",
-        "got": false
+        "got": false,
+        "date": ""
     },
     {
         "title": "ズボン",
@@ -42,6 +46,7 @@
         "memo": "普段で使える長ズボン",
         "img": "",
         "link": "",
-        "got": true
+        "got": true,
+        "date": "2026.8.28"
     }
 ]

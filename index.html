@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MY PICKS</title>
+
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
 </head>
@@ -23,6 +24,20 @@
 
         <div id="paginationArea"></div>
 
+    </div>
+
+    <div id="detail-modal" class="qr-modal" onclick="closeItemModal()">
+        <div class="qr-modal-content" onclick="event.stopPropagation()">
+            <span class="qr-modal-close" onclick="closeItemModal()">&times;</span>
+            
+            <div id="modalImgBox" class="item-img-box" style="border-radius: 8px; margin-top: 15px; position: relative;"></div>
+            <div style="padding-top: 15px; text-align: left;">
+                <div id="modalTitle" style="font-size: 18px; font-weight: bold; color: #1a202c; margin-bottom: 12px; line-height: 1.4;"></div>
+                <ul id="modalDetails" style="padding: 0; margin: 0 0 15px 0; list-style: none; font-size: 14px; color: #4a5568; font-weight: bold; line-height: 2.0;"></ul>
+                
+                <div id="modalActionArea" style="display: flex; flex-direction: column; gap: 0;"></div>
+            </div>
+        </div>
     </div>
 
     <footer></footer>

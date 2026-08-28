@@ -3,213 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ほしいもの図鑑</title>
-    <style>
-        
-        body { background-color: #121212; color: #e0e0e0; font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 20px; }
-        h1 { text-align: center; color: #00ffcc; text-shadow: 0 0 10px rgba(0, 255, 204, 0.5); margin-bottom: 30px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .card { background-color: #1e1e1e; border: 1px solid #333; border-radius: 10px; overflow: hidden; transition: transform 0.2s, border-color 0.2s; cursor: pointer; }
-        .card:hover { transform: translateY(-5px); border-color: #00ffcc; }
-        .card-img { width: 100%; height: 180px; background-color: #2a2a2a; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px; object-fit: cover; }
-        .img-container { position: relative; width: 100%; height: 180px; background-color: #1a1a1a; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        .card-content { padding: 15px; }
-        .title { font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #fff; }
-        .info { font-size: 14px; margin: 5px 0; color: #aaa; }
-        .price { color: #ff5555; font-weight: bold; }
-        .stars { color: #ffcc00; }
-        
-        .get-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-12deg); color: rgba(0, 255, 204, 0.7); font-size: 56px; font-weight: 900; pointer-events: none; letter-spacing: 4px; z-index: 10; text-align: center; line-height: 0.9; font-family: 'Impact', 'Arial Black', sans-serif; white-space: nowrap; }
-        .get-date { font-size: 13px; display: block; font-weight: bold; margin-top: 5px; color: rgba(0, 255, 204, 0.7); letter-spacing: 0px; font-family: 'Helvetica Neue', Arial, sans-serif; }
-
-        .get-overlay.animate { animation: stamp-action 0.2s ease-out forwards; }
-        @keyframes stamp-action { 0% { opacity: 0; transform: translate(-50%, -50%) rotate(-12deg) scale(2); } 100% { opacity: 1; transform: translate(-50%, -50%) rotate(-12deg) scale(1); } }
-
-        .action-btn { display: inline-block; width: 100%; text-align: center; box-sizing: border-box; background-color: #ff4757; color: #fff; font-weight: bold; padding: 12px; border-radius: 8px; text-decoration: none; margin-top: 15px; border: none; cursor: pointer; font-size: 16px; }
-        .action-btn.already-get { background-color: #333; color: #888; border: 1px solid #444; cursor: not-allowed; }
-        .filter-container { margin-bottom: 20px; display: flex; gap: 10px; }
-        .filter-btn { background: #2f3542; color: #fff; border: 1px solid #57606f; padding: 8px 16px; border-radius: 20px; cursor: pointer; }
-        .filter-btn.active { background: #00ffcc; color: #111; font-weight: bold; }
-
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); z-index: 9999; justify-content: center; align-items: center; box-sizing: border-box; padding: 20px; }
-        .modal-content { background-color: #1e1e1e; border: 2px solid #333; border-radius: 15px; width: 95%; max-width: 450px; overflow: hidden; position: relative; animation: fadeIn 0.2s ease; margin: auto; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .close-btn { position: absolute; top: 12px; right: 12px; font-size: 24px; color: #aaa; cursor: pointer; z-index: 10000; background: rgba(0,0,0,0.5); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-        .close-btn:hover { color: #fff; background: rgba(0,0,0,0.8); }
-        .buy-btn { display: inline-block; width: 100%; text-align: center; box-sizing: border-box; background-color: #00ffcc; color: #111; font-weight: bold; padding: 12px; border-radius: 8px; text-decoration: none; margin-top: 10px; transition: background 0.2s; }
-        .buy-btn:hover { background-color: #00ccaa; }
-
-        .card:has(.get-overlay) .card-img, .modal-content:has(.get-overlay) img { filter: brightness(0.5); }
-        .title { line-height: 1.5; display: inline-block; width: 100%; vertical-align: middle; }
-
-    </style>
+    <title>MY PICKS</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/my-profile/script.js"></script>
+    <script src="collection.js"></script>
 </head>
 <body>
 
-    <h1>ほしいもの図鑑</h1>
-    
-    <div class="filter-container">
-        <button class="filter-btn" id="sort-cheap">価格が安い順</button>
-        <button class="filter-btn" id="sort-stars">ほしい度が高い順</button>
-        <button class="filter-btn" id="filter-not-yet">GETしてないもの</button>
-    </div>
+    <header></header>
 
-    <div class="grid" id="zukan-grid"></div>
-    
-    <div id="detail-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" id="modal-close">&times;</span>
-            <div id="modal-body">
-            </div>
+    <div id="emergencyAlert" class="emergency-alert"></div>
+
+    <div class="main-container">
+        
+        <div class="breadcrumb">
+            <a href="/my-profile/">HOME</a> ＞ <span>MY PICKS</span>
         </div>
+
+        <div id="collectionGrid" class="collection-grid"></div>
+
+        <div id="paginationArea"></div>
+
     </div>
 
-    <script>
-        let itemData = [];
-        let currentFilter = 'all';
+    <footer></footer>
 
-        let savedGets = JSON.parse(localStorage.getItem('zukan_get_dates')) || {};
-
-        function displayItems(items) {
-            const grid = document.getElementById('zukan-grid');
-            grid.innerHTML = '';
-            
-            const filteredItems = items.filter(item => {
-                const isGot = !!savedGets[item.title];
-                if (currentFilter === 'not-yet') return !isGot;
-                return true;
-            });
-
-            filteredItems.forEach((item) => {
-                const imgContent = item.img ? `<img src="${item.img}" class="card-img" alt="${item.title}">` : `<div class="card-img">NO IMAGE</div>`;
-                
-                const getInfo = savedGets[item.title];
-                const getOverlay = getInfo ? `<div class="get-overlay">GET<span class="get-date">―${getInfo.date}―</span></div>` : '';
-                
-                const trueIndex = itemData.findIndex(i => i.title === item.title);
-
-                const cardHTML = `
-                    <div class="card" onclick="openModal(${trueIndex})">
-                        <div class="img-container">
-                            ${imgContent}
-                            ${getOverlay}
-                        </div>
-                        <div class="card-content">
-                            <div class="title">${item.title}</div>
-                            <div class="info">価格: <span class="price">${item.price}</span></div>
-                            <div class="info">ほしい度: <span class="stars">${item.stars}</span></div>
-                            <div class="info">メモ: ${item.memo}</div>
-                        </div>
-                    </div>
-                `;
-                grid.insertAdjacentHTML('beforeend', cardHTML);
-            });
-        }
-
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                itemData = data;
-                displayItems(itemData);
-            })
-            .catch(error => {
-                console.error('データの読み込みに失敗しました:', error);
-                document.getElementById('zukan-grid').innerHTML = '<p style="text-align:center; color:red;">JSONデータの読み込みに失敗しました。</p>';
-            });
-
-        function openModal(index) {
-            const item = itemData[index];
-            const modal = document.getElementById('detail-modal');
-            const modalBody = document.getElementById('modal-body');
-            
-            const imgContent = item.img ? `<img src="${item.img}" style="width:100%; height:240px; object-fit:contain; background:#1a1a1a;" alt="${item.title}">` : `<div class="card-img">NO IMAGE</div>`;
-            
-            const getInfo = savedGets[item.title];
-
-            const getOverlay = getInfo ? `<div class="get-overlay">GET<span class="get-date">―${getInfo.date}―</span></div>` : '';
-
-            let getButtonHTML = '';
-            if (getInfo) {
-                getButtonHTML = `<button class="action-btn already-get" disabled>GET済みです</button>`;
-            } else {
-                getButtonHTML = `<button class="action-btn" onclick="clickGet(${index})">このアイテムをGETする！</button>`;
-            }
-
-            const linkButton = item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="buy-btn">商品ページを見に行く ➡️</a>` : '';
-
-            modalBody.innerHTML = `
-                <div class="img-container" id="modal-img-container">
-                    ${imgContent}
-                    ${getOverlay}
-                </div>
-                <div style="padding: 20px;">
-                    <h2 style="margin-top:0; color:#fff; font-size:20px;">${item.title}</h2>
-                    <p style="font-size:15px; margin:8px 0;">価格: <span class="price" style="font-size:16px;">${item.price}</span></p>
-                    <p style="font-size:15px; margin:8px 0;">ほしい度: <span class="stars">${item.stars}</span></p>
-                    <hr style="border:0; border-top:1px solid #333; margin:12px 0;">
-                    <p style="font-size:14px; color:#ccc; line-height:1.5; margin-bottom:15px;"><strong>メモ:</strong><br>${item.memo}</p>
-                    ${getButtonHTML}
-                    ${linkButton}
-                </div>
-            `;
-            modal.style.display = 'flex';
-        }
-
-        window.clickGet = function(index) {
-            const item = itemData[index];
-            if (savedGets[item.title]) return;
-
-            const today = new Date();
-
-            const dateStr = `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`;
-
-            savedGets[item.title] = { date: dateStr };
-            localStorage.setItem('zukan_get_dates', JSON.stringify(savedGets));
-
-            const container = document.getElementById('modal-img-container');
-            container.insertAdjacentHTML('beforeend', `<div class="get-overlay">GET<span class="get-date">―${dateStr}―</span></div>`);
-
-            const btn = document.querySelector('.action-btn');
-            if (btn) {
-                btn.className = 'action-btn already-get';
-                btn.innerText = 'GET済みです';
-                btn.disabled = true;
-            }
-
-            displayItems(itemData);
-        };
-
-        const modal = document.getElementById('detail-modal');
-        document.getElementById('modal-close').addEventListener('click', () => modal.style.display = 'none');
-        window.addEventListener('click', (e) => { if (e.target == modal) modal.style.display = 'none'; });
-
-        function getPriceNumber(p) { return Number(p.replace(/[^0-9]/g, '')); }
-        function getStarCount(s) { return (s.match(/★/g) || []).length; }
-
-        document.getElementById('sort-cheap').addEventListener('click', () => {
-            currentFilter = 'all';
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('sort-cheap').classList.add('active');
-            itemData.sort((a, b) => getPriceNumber(a.price) - getPriceNumber(b.price));
-            displayItems(itemData);
-        });
-
-        document.getElementById('sort-stars').addEventListener('click', () => {
-            currentFilter = 'all';
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('sort-stars').classList.add('active');
-            itemData.sort((a, b) => getStarCount(b.stars) - getStarCount(a.stars));
-            displayItems(itemData);
-        });
-
-        document.getElementById('filter-not-yet').addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('filter-not-yet').classList.add('active');
-            currentFilter = 'not-yet';
-            displayItems(itemData);
-        });
-
-    </script>
-    
 </body>
 </html>

@@ -1,4 +1,3 @@
-/* 🤍 PROFILEサイトと完全に統一されたオシャレな白ベースデザイン */
 body { font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif; background-color: #ffffff; color: #333333; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
 
 /* ヘッダー・フッターの白ベース調整 */
@@ -13,7 +12,7 @@ header a:hover { opacity: 0.7 !important; transition: opacity 0.2s ease !importa
 .breadcrumb a { color: #3182ce; text-decoration: none; }
 .breadcrumb a:hover { text-decoration: underline !important; }
 
-/* 🎁 図鑑のカードデザイン設定（パソコン画面で横に4つ並びます） */
+/* 🎁 図鑑のカードデザイン設定 */
 .collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; margin-bottom: 40px; }
 .item-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
 .item-card:hover { transform: translateY(-4px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); }
@@ -27,7 +26,7 @@ header a:hover { opacity: 0.7 !important; transition: opacity 0.2s ease !importa
 .item-detail-list span { color: #1a202c; }
 .stars { color: #ecc94b; }
 
-/* 🔒 【解決！】前のコードをヒントに、画面の「真ん中」に100%固定させる最強のflexモーダル設定 */
+/* 🔒 ポップアップ全体の背景（ほどよく後ろが透けて見える、いちばん綺麗な透明度） */
 .qr-modal { 
     display: none; 
     position: fixed !important; 
@@ -35,36 +34,67 @@ header a:hover { opacity: 0.7 !important; transition: opacity 0.2s ease !importa
     left: 0 !important; 
     width: 100% !important; 
     height: 100% !important; 
-    background: rgba(0, 0, 0, 0.6) !important; /* 💡 背景をほんのり暗い半透明の膜にします */
+    background: rgba(0, 0, 0, 0.45) !important; /* 💡 0.6から0.45へ、後ろのサイトが見えやすい絶妙な暗さに調整 */
     z-index: 9999 !important; 
-    /* 💡 前のコードの技！これで中の白い箱を画面の「上下左右のど真ん中」に強制ロックします */
-    display: none; 
     justify-content: center !important; 
     align-items: center !important; 
     box-sizing: border-box !important;
 }
 
-/* 📄 ポップアップの中の白いオシャレなボックス */
+/* 📄 ポップアップの中の白いボックス（一回り大きくサイズアップしました！） */
 .qr-modal-content { 
     background: #ffffff !important; 
     padding: 20px !important; 
     border-radius: 12px !important; 
     position: relative !important; 
-    max-width: 90% !important; 
-    width: 320px !important; 
+    max-width: 95% !important; 
+    width: 380px !important; /* 💡 320pxから380pxへ大きく広げました！ */
     box-sizing: border-box !important; 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important; 
     margin: auto !important;
 }
 
 /* ❌ 右上のバツボタンの位置調整 */
-.qr-modal-close { position: absolute !important; top: 10px !important; right: 15px !important; font-size: 24px !important; color: #aaa !important; cursor: pointer !important; font-weight: bold !important; }
+.qr-modal-close { position: absolute !important; top: 10px !important; right: 15px !important; font-size: 24px !important; color: #aaa !important; cursor: pointer !important; font-weight: bold !important; z-index: 20; }
 
-/* プロフィール共通ボタン（通販リンク用） */
+/* 🟢 【大復活！】画像の上に斜めにスタンプされる、半透明の超かっこいいGET設定 */
+.get-overlay { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0, 0, 0, 0.35); /* 💡 商品が見えるように画像の上にも薄黒い透明な膜をはさみます */
+    color: #00ffcc; /* PROFILEサイトのネオングリーンアクセントカラー */
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    font-weight: 900; 
+    font-size: 42px; 
+    letter-spacing: 2px;
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    transform: rotate(-12deg) scale(1.1); /* 💡 カッコよく斜めに傾けます */
+    pointer-events: none;
+    z-index: 10;
+    white-space: nowrap;
+}
+.get-date { 
+    font-size: 13px; 
+    display: block; 
+    font-weight: bold; 
+    margin-top: 4px; 
+    color: #00ffcc; 
+    letter-spacing: 0px; 
+    font-family: 'Helvetica Neue', Arial, sans-serif; 
+}
+
+/* プロフィール共通ボタン */
 .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 10px; color: #4a5568; text-decoration: none; font-weight: bold; border-radius: 6px; transition: all 0.2s; font-size: 14px; background: #f7fafc; border: 1px solid #e2e8f0; box-sizing: border-box; }
 .btn:hover { background: #edf2f7; color: #1a202c; }
 
-/* 📄 13個以上になった時の自動ページボタン */
+/* 📄 自動ページボタン */
 .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 30px; margin-bottom: 20px; }
 .page-link { text-decoration: none; padding: 8px 14px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; font-weight: bold; color: #4a5568; background: #f7fafc; transition: all 0.2s; }
 .page-link:hover, .page-link.current { background: #edf2f7; color: #1a202c; border-color: #cbd5e0; }

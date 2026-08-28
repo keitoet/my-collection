@@ -1,6 +1,7 @@
 const ITEMS_PER_PAGE = 12;
 let allItemsData = [];
 
+// 🔒 1. 自分の status.json から緊急アラートを読み込む機能
 function loadStatusFromJson() {
     fetch('status.json')
         .then(response => response.json())
@@ -20,6 +21,7 @@ function loadStatusFromJson() {
         .catch(error => console.error('Error loading status:', error));
 }
 
+// 📦 2. 自分の shared.html からヘッダー・フッターを読み込む機能
 function loadSharedComponents() {
     fetch('shared.html')
         .then(res => res.text())
@@ -36,6 +38,7 @@ function loadSharedComponents() {
         .catch(error => console.error('Error loading shared components:', error));
 }
 
+// 🎁 3. 自分の data.json から商品を読み込んでカードを並べる機能
 function loadPicksFromJson() {
     const grid = document.getElementById('collectionGrid');
     const paginationArea = document.getElementById('paginationArea');
@@ -62,6 +65,7 @@ function loadPicksFromJson() {
                     ? `<img src="${item.img}" alt="${item.title}">` 
                     : `<span class="no-img-text">NO IMAGE</span>`;
 
+                // 💡 カードの枠（div）に「onclick="openItemModal(...)"」をガツンと合流させて、クリック可能に大復活させました！
                 return `
                     <div class="item-card" onclick="openItemModal(${actualIndex})">
                         <div class="item-img-box">
@@ -96,6 +100,7 @@ function loadPicksFromJson() {
         .catch(error => console.error('Error loading picks:', error));
 }
 
+// 👁️ 4. クリックしたら画面中央に詳細ポップアップを開く機能
 function openItemModal(index) {
     const item = allItemsData[index];
     if (!item) return;
@@ -113,6 +118,7 @@ function openItemModal(index) {
     modalImgBox.innerHTML = imgHtml;
     modalTitle.innerText = item.title;
 
+    // 💡 JSONのgot（trueかfalseか）を見て、バッジの見た目を自動で切り替える仕掛け
     const gotStatusHtml = item.got === true
         ? `<li>状態：<span style="color:#2f855a; background:#c6f6d5; padding:2px 8px; border-radius:12px; font-size:12px;">🟢 GET済み！</span></li>`
         : `<li>状態：<span style="color:#9b2c2c; background:#fed7d7; padding:2px 8px; border-radius:12px; font-size:12px;">🔴 まだ持ってない</span></li>`;
@@ -134,10 +140,12 @@ function openItemModal(index) {
     modal.style.display = "flex";
 }
 
+// ❌ 5. ポップアップを閉じる機能
 function closeItemModal() {
     document.getElementById('itemModal').style.display = "none";
 }
 
+// 🚀 すべての機能のスタートスイッチ
 window.addEventListener('DOMContentLoaded', () => {
     loadSharedComponents();
     loadStatusFromJson();

@@ -2,7 +2,7 @@ const ITEMS_PER_PAGE = 12;
 let allItemsData = [];
 
 function loadStatusFromJson() {
-    fetch('https://keitoet.github.io/my-profile/')
+    fetch('status.json')
         .then(response => response.json())
         .then(data => {
             const emergencyAlert = document.getElementById('emergencyAlert');
@@ -41,6 +41,8 @@ function loadPicksFromJson() {
     const paginationArea = document.getElementById('paginationArea');
     if (!grid) return;
 
+    grid.innerHTML = '';
+
     const urlParams = new URLSearchParams(window.location.search);
     let currentPage = parseInt(urlParams.get('page')) || 1;
 
@@ -62,14 +64,13 @@ function loadPicksFromJson() {
                     ? `<img src="${item.img}" alt="${item.title}">` 
                     : `<span class="no-img-text">NO IMAGE</span>`;
 
-                // 💡 一覧画面のカードの画像の上にも、JSONのデータから自動で斜めGETスタンプを出現させます！
                 const getOverlay = item.got === true 
-                    ? `<div class="get-overlay">GET<span class="get-date">―${item.date}―</span></div>` 
+                    ? `<div class="get-overlay"><div class="get-inner">GET<span class="get-date">―${item.date}―</span></div></div>` 
                     : '';
 
                 return `
                     <div class="item-card" onclick="openModal(${actualIndex})">
-                        <div class="item-img-box" style="position: relative;">
+                        <div class="item-img-box">
                             ${imgHtml}
                             ${getOverlay}
                         </div>
@@ -115,9 +116,8 @@ window.openModal = function(index) {
         ? `<img src="${item.img}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;">` 
         : `<span class="no-img-text">NO IMAGE</span>`;
     
-    // 💡 ポップアップした後の大きな画像の上にも、JSONに書いたお気に入りの斜め日付スタンプを100%自動で流し込みます！
     const getOverlay = item.got === true 
-        ? `<div class="get-overlay" style="font-size: 52px;">GET<span class="get-date" style="font-size:14px;">―${item.date}―</span></div>` 
+        ? `<div class="get-overlay"><div class="get-inner" style="font-size: 52px;">GET<span class="get-date" style="font-size:14px;">―${item.date}―</span></div></div>` 
         : '';
     
     modalImgBox.innerHTML = imgHtml + getOverlay;

@@ -9,7 +9,7 @@ footer { text-align: center; padding: 30px; color: #718096; font-size: 13px; bor
 
 header a:hover { opacity: 0.7 !important; transition: opacity 0.2s ease !important; }
 
-.breadcrumb { font-size: 13px; color: #718096; margin-bottom: 30px; font-weight: bold; text-align: left; line-height: 1.6; }
+.breadcrumb { font-size: 13px; color: #718096; margin-bottom: 30px; text-align: left; line-height: 1.6; }
 .breadcrumb a { color: #3182ce; text-decoration: none; }
 .breadcrumb a:hover { text-decoration: underline !important; color: #2b6cb0 !important; }
 

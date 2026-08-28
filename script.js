@@ -8,7 +8,7 @@ function loadPicksFromJson() {
     const urlParams = new URLSearchParams(window.location.search);
     let currentPage = parseInt(urlParams.get('page')) || 1;
 
-    fetch('picks.json')
+    fetch('data.json')
         .then(response => response.json())
         .then(data => {
             if (!data) return;

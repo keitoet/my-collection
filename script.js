@@ -1,6 +1,5 @@
 const ITEMS_PER_PAGE = 12;
-let itemData = [];
-let savedGets = JSON.parse(localStorage.getItem('zukan_get_dates')) || {};
+let allItemsData = [];
 
 // 🔒 1. 自分の status.json から緊急アラートを読み込む機能
 function loadStatusFromJson() {
@@ -52,7 +51,7 @@ function loadPicksFromJson() {
         .then(response => response.json())
         .then(data => {
             if (!data) return;
-            itemData = data;
+            allItemsData = data;
 
             const totalItems = data.length;
             const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
@@ -66,15 +65,10 @@ function loadPicksFromJson() {
                     ? `<img src="${item.img}" alt="${item.title}">` 
                     : `<span class="no-img-text">NO IMAGE</span>`;
 
-                // 💡 GET済みなら画像の上に薄くGETオーバーレイを出す元の機能を合流！
-                const getInfo = savedGets[item.title];
-                const getOverlay = getInfo ? `<div class="get-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:bold; font-size:18px;">GET<span style="font-size:11px;">―${getInfo.date}―</span></div>` : '';
-
                 return `
                     <div class="item-card" onclick="openModal(${actualIndex})">
-                        <div class="item-img-box" style="position: relative;">
+                        <div class="item-img-box">
                             ${imgHtml}
-                            ${getOverlay}
                         </div>
                         <div class="item-info">
                             <div class="item-title">${item.title}</div>
@@ -105,50 +99,43 @@ function loadPicksFromJson() {
         .catch(error => console.error('Error loading picks:', error));
 }
 
-// 👁️ 4. 【大復活！】クリックしたら画面中央に詳細ポップアップを開く機能
+// 👁️ 4. クリックしたら画面中央に詳細ポップアップを開く機能
 window.openModal = function(index) {
-    const item = itemData[index];
+    const item = allItemsData[index];
     if (!item) return;
 
-    // 💡 IDの名前を前の設定通りの「detail-modal」に完璧に修正しました！
     const modal = document.getElementById('detail-modal');
     const modalImgBox = document.getElementById('modalImgBox');
     const modalTitle = document.getElementById('modalTitle');
     const modalDetails = document.getElementById('modalDetails');
-    const modalLinkBtn = document.getElementById('modalLinkBtn');
 
     const imgHtml = item.img && item.img.trim() !== "" 
         ? `<img src="${item.img}" alt="${item.title}" style="width:100%; height:100%; object-fit:cover;">` 
         : `<span class="no-img-text">NO IMAGE</span>`;
     
-    // GETオーバーレイの引き継ぎ
-    const getInfo = savedGets[item.title];
-    const getOverlay = getInfo ? `<div class="get-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:bold; font-size:22px;">GET<span style="font-size:12px;">―${getInfo.date}―</span></div>` : '';
-
-    modalImgBox.innerHTML = imgHtml + getOverlay;
+    modalImgBox.innerHTML = imgHtml;
     modalTitle.innerText = item.title;
 
-    // GETボタンの出し分け
-    let getButtonHTML = '';
-    if (getInfo) {
-        getButtonHTML = `<button class="btn" style="width: 100%; margin-bottom: 10px; background: #e2e8f0; color: #a0aec0; cursor: not-allowed;" disabled>GET済みです</button>`;
-    } else {
-        getButtonHTML = `<button class="btn" style="width: 100%; margin-bottom: 10px; background: #ecc94b; color: #fff; border-color: #ecc94b;" onclick="clickGet(${index})">このアイテムをGETする！</button>`;
-    }
+    // 💡 慧斗くんの言う通り、JSONの"got"のデータだけを見てバッジを切り替えます！
+    const gotStatusHtml = item.got === true
+        ? `<li>状態：<span style="color:#2f855a; background:#c6f6d5; padding:2px 8px; border-radius:12px; font-size:12px; display:inline-block; vertical-align:middle;">🟢 GET済み！</span></li>`
+        : `<li>状態：<span style="color:#9b2c2c; background:#fed7d7; padding:2px 8px; border-radius:12px; font-size:12px; display:inline-block; vertical-align:middle;">🔴 まだ持ってない</span></li>`;
 
     modalDetails.innerHTML = `
         <li>価格：<span style="color:#1a202c;">${item.price}</span></li>
         <li>ほしい度：<span class="stars">${item.stars}</span></li>
+        ${gotStatusHtml}
         <li>メモ：<span style="color:#1a202c; font-weight:normal;">${item.memo}</span></li>
     `;
 
-    // 新しくボタンエリアを組み立てる
+    // 💡 商品ページへ飛ぶボタンだけのシンプルな設定に直しました
     const actionArea = document.getElementById('modalActionArea');
     if (actionArea) {
-        const linkButton = item.link && item.link.trim() !== "" 
-            ? `<a href="${item.link}" target="_blank" class="btn" style="width: 100%; text-align: center; background: #3182ce; color: #fff; border-color: #3182ce;">商品ページを見に行く ➡️</a>` 
-            : '';
-        actionArea.innerHTML = getButtonHTML + linkButton;
+        if (item.link && item.link.trim() !== "") {
+            actionArea.innerHTML = `<a href="${item.link}" target="_blank" class="btn" style="width: 100%; text-align: center; background: #3182ce; color: #fff; border-color: #3182ce;">商品ページを見に行く ➡️</a>`;
+        } else {
+            actionArea.innerHTML = '';
+        }
     }
 
     modal.style.display = "flex";
@@ -159,37 +146,7 @@ window.closeItemModal = function() {
     document.getElementById('detail-modal').style.display = "none";
 };
 
-// 🟢 6. お気に入りの「GETボタン」を押したときのスタンプ追加機能
-window.clickGet = function(index) {
-    const item = itemData[index];
-    if (savedGets[item.title]) return;
-
-    const today = new Date();
-    const dateStr = `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`;
-
-    savedGets[item.title] = { date: dateStr };
-    localStorage.setItem('zukan_get_dates', JSON.stringify(savedGets));
-
-    // 画面中央のポップアップ画像の上に即時GETを表示
-    const modalImgBox = document.getElementById('modalImgBox');
-    if (modalImgBox) {
-        modalImgBox.insertAdjacentHTML('beforeend', `<div class="get-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:bold; font-size:22px;">GET<span style="font-size:12px;">―${dateStr}―</span></div>`);
-    }
-
-    // ボタンを「GET済み」に変更
-    const actionArea = document.getElementById('modalActionArea');
-    if (actionArea) {
-        const linkButton = item.link && item.link.trim() !== "" 
-            ? `<a href="${item.link}" target="_blank" class="btn" style="width: 100%; text-align: center; background: #3182ce; color: #fff; border-color: #3182ce;">商品ページを見に行く ➡️</a>` 
-            : '';
-        actionArea.innerHTML = `<button class="btn" style="width: 100%; margin-bottom: 10px; background: #e2e8f0; color: #a0aec0; cursor: not-allowed;" disabled>GET済みです</button>` + linkButton;
-    }
-
-    // メイン一覧画面のカード表示も更新
-    loadPicksFromJson();
-};
-
-// 🚀 7. スタートスイッチ
+// 🚀 6. スタートスイッチ
 window.addEventListener('DOMContentLoaded', () => {
     loadSharedComponents();
     loadStatusFromJson();

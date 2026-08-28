@@ -26,12 +26,10 @@ function loadSharedComponents() {
         .then(html => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
-            
             const headerEl = document.querySelector('header');
             const footerEl = document.querySelector('footer');
             const sharedHeader = doc.getElementById('commonHeader');
             const sharedFooter = doc.getElementById('commonFooter');
-
             if (headerEl && sharedHeader) headerEl.innerHTML = sharedHeader.innerHTML;
             if (footerEl && sharedFooter) footerEl.innerHTML = sharedFooter.innerHTML;
         })
@@ -54,7 +52,6 @@ function loadPicksFromJson() {
 
             const totalItems = data.length;
             const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
             const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
             const endIndex = startIndex + ITEMS_PER_PAGE;
             const pageData = data.slice(startIndex, endIndex);
@@ -115,9 +112,15 @@ function openItemModal(index) {
     
     modalImgBox.innerHTML = imgHtml;
     modalTitle.innerText = item.title;
+
+    const gotStatusHtml = item.got === true
+        ? `<li>状態：<span style="color:#2f855a; background:#c6f6d5; padding:2px 8px; border-radius:12px; font-size:12px;">🟢 GET済み！</span></li>`
+        : `<li>状態：<span style="color:#9b2c2c; background:#fed7d7; padding:2px 8px; border-radius:12px; font-size:12px;">🔴 まだ持ってない</span></li>`;
+
     modalDetails.innerHTML = `
         <li>価格：<span style="color:#1a202c;">${item.price}</span></li>
         <li>ほしい度：<span class="stars">${item.stars}</span></li>
+        ${gotStatusHtml}
         <li>メモ：<span style="color:#1a202c; font-weight:normal;">${item.memo}</span></li>
     `;
 

@@ -1,7 +1,6 @@
 const ITEMS_PER_PAGE = 12;
 let allItemsData = [];
 
-// 🔒 1. 自分の status.json から緊急アラートを読み込む機能
 function loadStatusFromJson() {
     fetch('status.json')
         .then(response => response.json())
@@ -21,7 +20,6 @@ function loadStatusFromJson() {
         .catch(error => console.error('Error loading status:', error));
 }
 
-// 📦 2. 自分の shared.html からヘッダー・フッターを読み込む機能
 function loadSharedComponents() {
     fetch('shared.html')
         .then(res => res.text())
@@ -38,7 +36,6 @@ function loadSharedComponents() {
         .catch(error => console.error('Error loading shared components:', error));
 }
 
-// 🎁 3. 自分の data.json から商品を読み込んでカードを並べる機能
 function loadPicksFromJson() {
     const grid = document.getElementById('collectionGrid');
     const paginationArea = document.getElementById('paginationArea');
@@ -99,7 +96,6 @@ function loadPicksFromJson() {
         .catch(error => console.error('Error loading picks:', error));
 }
 
-// 👁️ 4. クリックしたら画面中央に詳細ポップアップを開く機能
 window.openModal = function(index) {
     const item = allItemsData[index];
     if (!item) return;
@@ -130,25 +126,24 @@ window.openModal = function(index) {
     const actionArea = document.getElementById('modalActionArea');
     if (actionArea) {
         if (item.link && item.link.trim() !== "") {
-            actionArea.innerHTML = `<a href="${item.link}" target="_blank" class="btn" style="width: 100%; text-align: center; background: #3182ce; color: #fff; border-color: #3182ce;">商品ページを見に行く ➡️</a>`;
+            actionArea.innerHTML = `<a href="${item.link}" target="_blank" class="btn" style="width: 100%; text-align: center; background: #3182ce; color: #fff; border-color: #3182ce; margin-top:10px;">商品ページを見に行く ➡️</a>`;
         } else {
             actionArea.innerHTML = '';
         }
     }
 
+    // 💡 前のコードの技！blockではなく「flex」で開くことで、完全に画面の真ん中に吸い寄せられます！
     modal.style.display = "flex";
 };
 
-// ❌ 5. ポップアップを閉じる機能
 window.closeItemModal = function() {
     document.getElementById('detail-modal').style.display = "none";
 };
 
-// 🚀 6. 全機能の一斉スタートスイッチ（バグを修正しました！）
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     loadSharedComponents();
     loadStatusFromJson();
-    loadPicksFromJson(); // 💡 ここに起動スイッチを合流させたので、100%全自動でカードが並びます！
+    loadPicksFromJson();
 
     const modal = document.getElementById('detail-modal');
     window.addEventListener('click', (e) => {

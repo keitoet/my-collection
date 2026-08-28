@@ -116,7 +116,6 @@ window.openModal = function(index) {
     modalImgBox.innerHTML = imgHtml;
     modalTitle.innerText = item.title;
 
-    // 💡 慧斗くんの言う通り、JSONの"got"のデータだけを見てバッジを切り替えます！
     const gotStatusHtml = item.got === true
         ? `<li>状態：<span style="color:#2f855a; background:#c6f6d5; padding:2px 8px; border-radius:12px; font-size:12px; display:inline-block; vertical-align:middle;">🟢 GET済み！</span></li>`
         : `<li>状態：<span style="color:#9b2c2c; background:#fed7d7; padding:2px 8px; border-radius:12px; font-size:12px; display:inline-block; vertical-align:middle;">🔴 まだ持ってない</span></li>`;
@@ -128,7 +127,6 @@ window.openModal = function(index) {
         <li>メモ：<span style="color:#1a202c; font-weight:normal;">${item.memo}</span></li>
     `;
 
-    // 💡 商品ページへ飛ぶボタンだけのシンプルな設定に直しました
     const actionArea = document.getElementById('modalActionArea');
     if (actionArea) {
         if (item.link && item.link.trim() !== "") {
@@ -146,13 +144,12 @@ window.closeItemModal = function() {
     document.getElementById('detail-modal').style.display = "none";
 };
 
-// 🚀 6. スタートスイッチ
+// 🚀 6. 全機能の一斉スタートスイッチ（バグを修正しました！）
 window.addEventListener('DOMContentLoaded', () => {
     loadSharedComponents();
     loadStatusFromJson();
-    loadPicksFromJson();
+    loadPicksFromJson(); // 💡 ここに起動スイッチを合流させたので、100%全自動でカードが並びます！
 
-    // モーダルの外側をクリックしたら閉じる設定
     const modal = document.getElementById('detail-modal');
     window.addEventListener('click', (e) => {
         if (e.target == modal) closeItemModal();

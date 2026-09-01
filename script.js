@@ -4,9 +4,6 @@ let allItemsData = [];
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI/export?format=csv';
 
 function loadStatusFromSheet() {
-    const avatarContainer = document.getElementById('avatarContainer');
-    const statusBadge = document.getElementById('statusBadge');
-    const tagsContainer = document.getElementById('tagsContainer');
     const emergencyAlert = document.getElementById('emergencyAlert');
 
     fetch(SHEET_URL)
@@ -21,37 +18,16 @@ function loadStatusFromSheet() {
             const targetRow = lines[2]; 
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
 
-            const statusText = cleanText(targetRow[1]);   
-            const tagsText = cleanText(targetRow[2]);     
             const alertText = cleanText(targetRow[3]);    
             const alertUrlText = cleanText(targetRow[4]); 
 
-            const isOnline = (statusText === '話せる');
-            const tagsArray = tagsText ? tagsText.split('/').map(t => t.trim()) : [];
-
-            if (avatarContainer && statusBadge) {
-                if (isOnline) {
-                    avatarContainer.className = "avatar-container online";
-                    statusBadge.innerHTML = '<span class="dot"></span>話せます';
-                } else {
-                    avatarContainer.className = "avatar-container offline";
-                    statusBadge.innerHTML = '<span class="dot"></span>話せない';
-                }
-                avatarContainer.style.opacity = "1";
-            }
-
-            if (tagsContainer) {
-                if (tagsArray.length > 0 && tagsArray[0] !== "") {
-                    tagsContainer.innerHTML = tagsArray.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
-                } else {
-                    tagsContainer.innerHTML = '';
-                }
-            }
-            
             if (emergencyAlert) {
                 if (alertText && alertText !== "") {
                     if (alertUrlText) {
-                        emergencyAlert.innerHTML = `<a href="${alertUrlText}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
+                        const fullUrl = alertUrlText.startsWith('http') 
+                            ? alertUrlText 
+                            : `https://github.io{alertUrlText}`;
+                        emergencyAlert.innerHTML = `<a href="${fullUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
                     } else {
                         emergencyAlert.innerText = alertText;
                     }
@@ -192,7 +168,7 @@ window.closeItemModal = function() {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadSharedComponents();
-    loadStatusFromSheet(); // 💡 起動スイッチの名前のすれ違いもカチッと修正しました！
+    loadStatusFromSheet();
     loadPicksFromJson();
 
     const modal = document.getElementById('detail-modal');

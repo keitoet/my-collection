@@ -21,19 +21,18 @@ function loadStatusFromJson() {
 
             const alertText = cleanText(targetRow[3]);    
             const alertUrlText = cleanText(targetRow[4]); 
-
-            if (alertText && alertText !== "") {
-                if (alertUrlText) {
-                    const fullUrl = alertUrlText.startsWith('http') 
-                        ? alertUrlText 
-                        : `https://github.io{alertUrlText}`;
-                    emergencyAlert.innerHTML = `<a href="${fullUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
+            
+            if (emergencyAlert) {
+                if (alertText && alertText !== "") {
+                    if (alertUrlText) {
+                        emergencyAlert.innerHTML = `<a href="${alertUrlText}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
+                    } else {
+                        emergencyAlert.innerText = alertText;
+                    }
+                    emergencyAlert.style.display = "block";
                 } else {
-                    emergencyAlert.innerHTML = alertText;
+                    emergencyAlert.style.display = "none";
                 }
-                emergencyAlert.style.display = "block";
-            } else {
-                emergencyAlert.style.display = "none";
             }
         })
         .catch(error => console.error('Error loading status from Sheet:', error));

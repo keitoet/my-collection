@@ -24,7 +24,10 @@ function loadStatusFromSheet() {
             if (emergencyAlert) {
                 if (alertText && alertText !== "") {
                     if (alertUrlText) {
-                        emergencyAlert.innerHTML = `<a href="${alertUrlText}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
+                        const fullUrl = alertUrlText.startsWith('http') 
+                            ? alertUrlText 
+                            : `https://github.io{alertUrlText}`;
+                        emergencyAlert.innerHTML = `<a href="${fullUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
                     } else {
                         emergencyAlert.innerText = alertText;
                     }
@@ -165,7 +168,7 @@ window.closeItemModal = function() {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadSharedComponents();
-    loadStatusFromJson();
+    loadStatusFromSheet();
     loadPicksFromJson();
 
     const modal = document.getElementById('detail-modal');

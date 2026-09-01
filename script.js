@@ -16,11 +16,10 @@ function loadStatusFromJson() {
             const lines = csvText.split('\n').map(line => line.split(','));
             if (!lines || lines.length < 3) return;
             
-            // 💡 慧斗くんが成功させた「lines[2]」のマス目指定を1ミリの狂いもなく完全移植！
             const targetRow = lines[2]; 
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
 
-            // 💡 3番目（D列：アラート）と 4番目（E列：URL）を正確に引っこ抜きます
+            // 💡 括弧 () をしっかり付けて、スプレッドシートの文字を正しく呼び出すように修正しました！
             const alertText = cleanText(targetRow[3]);    
             const alertUrlText = cleanText(targetRow[4]); 
 
@@ -121,7 +120,7 @@ function loadPicksFromJson() {
                 }
             }
         })
-        .catch(error => console.error('Error loading picks:', error));
+        .catch(error => console.error('Error loading news:', error));
 }
 
 window.openModal = function(index) {

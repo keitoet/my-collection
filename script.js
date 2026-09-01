@@ -16,10 +16,11 @@ function loadStatusFromJson() {
             const lines = csvText.split('\n').map(line => line.split(','));
             if (!lines || lines.length < 3) return;
             
+            // 💡 慧斗くんがメインサイトで成功させた [2] の行を正確に指定！
             const targetRow = lines[2]; 
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
 
-            // 💡 括弧 () をしっかり付けて、スプレッドシートの文字を正しく呼び出すように修正しました！
+            // 💡 大成功したマス目（D列＝3番目、E列＝4番目）の番号を100%完璧に合流させました！
             const alertText = cleanText(targetRow[3]);    
             const alertUrlText = cleanText(targetRow[4]); 
 

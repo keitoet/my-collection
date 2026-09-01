@@ -4,8 +4,10 @@ let allItemsData = [];
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI/export?format=csv';
 
 function loadStatusFromSheet() {
+    const avatarContainer = document.getElementById('avatarContainer');
+    const statusBadge = document.getElementById('statusBadge');
+    const tagsContainer = document.getElementById('tagsContainer');
     const emergencyAlert = document.getElementById('emergencyAlert');
-    if (!emergencyAlert) return;
 
     fetch(SHEET_URL)
         .then(res => {
@@ -16,25 +18,47 @@ function loadStatusFromSheet() {
             const lines = csvText.split('\n').map(line => line.split(','));
             if (!lines || lines.length < 3) return;
             
-            // 💡 慧斗くんが成功させた3行目のデータを、図鑑側の処理でも絶対にバグらない正しい部屋指定に直しました！
             const targetRow = lines[2]; 
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
-    
+
+            const statusText = cleanText(targetRow[1]);   
+            const tagsText = cleanText(targetRow[2]);     
             const alertText = cleanText(targetRow[3]);    
             const alertUrlText = cleanText(targetRow[4]); 
 
-            if (alertText && alertText !== "") {
-                if (alertUrlText) {
-                    const fullUrl = alertUrlText.startsWith('http') 
-                        ? alertUrlText 
-                        : `https://github.io${alertUrlText}`;
-                    emergencyAlert.innerHTML = `<a href="${fullUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
+            const isOnline = (statusText === '話せる');
+            const tagsArray = tagsText ? tagsText.split('/').map(t => t.trim()) : [];
+
+            if (avatarContainer && statusBadge) {
+                if (isOnline) {
+                    avatarContainer.className = "avatar-container online";
+                    statusBadge.innerHTML = '<span class="dot"></span>話せます';
                 } else {
-                    emergencyAlert.innerText = alertText;
+                    avatarContainer.className = "avatar-container offline";
+                    statusBadge.innerHTML = '<span class="dot"></span>話せない';
                 }
-                emergencyAlert.style.display = "block";
-            } else {
-                emergencyAlert.style.display = "none";
+                avatarContainer.style.opacity = "1";
+            }
+
+            if (tagsContainer) {
+                if (tagsArray.length > 0 && tagsArray[0] !== "") {
+                    tagsContainer.innerHTML = tagsArray.map(tag => `<span class="status-tag">#${tag}</span>`).join('');
+                } else {
+                    tagsContainer.innerHTML = '';
+                }
+            }
+            
+            if (emergencyAlert) {
+                if (alertText && alertText !== "") {
+                    if (alertUrlText) {
+                        emergencyAlert.innerHTML = `<a href="${alertUrlText}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
+                    } else {
+                        emergencyAlert.innerText = alertText;
+                    }
+                    emergencyAlert.style.display = "block";
+                } else {
+                    emergencyAlert.style.display = "none";
+                }
             }
         })
         .catch(error => console.error('Error loading status from Sheet:', error));

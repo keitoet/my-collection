@@ -17,10 +17,10 @@ function loadStatusFromSheet() {
             
             const targetRow = lines[2]; 
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
- 
+    
             const alertText = cleanText(targetRow[3]);    
-            const alertUrlText = cleanText(targetRow[4]);
-            
+            const alertUrlText = cleanText(targetRow[4]); 
+
             if (emergencyAlert) {
                 if (alertText && alertText !== "") {
                     if (alertUrlText) {

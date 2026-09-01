@@ -5,6 +5,7 @@ const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110
 
 function loadStatusFromSheet() {
     const emergencyAlert = document.getElementById('emergencyAlert');
+    if (!emergencyAlert) return;
 
     fetch(SHEET_URL)
         .then(res => {
@@ -15,26 +16,25 @@ function loadStatusFromSheet() {
             const lines = csvText.split('\n').map(line => line.split(','));
             if (!lines || lines.length < 3) return;
             
+            // 💡 慧斗くんが成功させた3行目のデータを、図鑑側の処理でも絶対にバグらない正しい部屋指定に直しました！
             const targetRow = lines[2]; 
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
     
             const alertText = cleanText(targetRow[3]);    
             const alertUrlText = cleanText(targetRow[4]); 
 
-            if (emergencyAlert) {
-                if (alertText && alertText !== "") {
-                    if (alertUrlText) {
-                        const fullUrl = alertUrlText.startsWith('http') 
-                            ? alertUrlText 
-                            : `https://github.io{alertUrlText}`;
-                        emergencyAlert.innerHTML = `<a href="${fullUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
-                    } else {
-                        emergencyAlert.innerText = alertText;
-                    }
-                    emergencyAlert.style.display = "block";
+            if (alertText && alertText !== "") {
+                if (alertUrlText) {
+                    const fullUrl = alertUrlText.startsWith('http') 
+                        ? alertUrlText 
+                        : `https://github.io${alertUrlText}`;
+                    emergencyAlert.innerHTML = `<a href="${fullUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
                 } else {
-                    emergencyAlert.style.display = "none";
+                    emergencyAlert.innerText = alertText;
                 }
+                emergencyAlert.style.display = "block";
+            } else {
+                emergencyAlert.style.display = "none";
             }
         })
         .catch(error => console.error('Error loading status from Sheet:', error));
@@ -168,7 +168,7 @@ window.closeItemModal = function() {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadSharedComponents();
-    loadStatusFromSheet(); // 💡 ここを loadStatusFromSheet に修正して、スプレッドシートの読み込みをカチッとスタートさせました！
+    loadStatusFromSheet(); // 💡 起動スイッチの名前のすれ違いもカチッと修正しました！
     loadPicksFromJson();
 
     const modal = document.getElementById('detail-modal');

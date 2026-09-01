@@ -1,7 +1,7 @@
 const ITEMS_PER_PAGE = 12;
 let allItemsData = [];
 
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI/edit?usp=sharing';
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI/export?format=csv';
 
 function loadStatusFromJson() {
     const emergencyAlert = document.getElementById('emergencyAlert');

@@ -168,7 +168,7 @@ window.closeItemModal = function() {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadSharedComponents();
-    loadStatusFromSheet();
+    loadStatusFromSheet(); // 💡 ここを loadStatusFromSheet に修正して、スプレッドシートの読み込みをカチッとスタートさせました！
     loadPicksFromJson();
 
     const modal = document.getElementById('detail-modal');

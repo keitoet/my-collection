@@ -3,9 +3,8 @@ let allItemsData = [];
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI/export?format=csv';
 
-function loadStatusFromJson() {
+function loadStatusFromSheet() {
     const emergencyAlert = document.getElementById('emergencyAlert');
-    if (!emergencyAlert) return;
 
     fetch(SHEET_URL)
         .then(res => {
@@ -18,9 +17,9 @@ function loadStatusFromJson() {
             
             const targetRow = lines[2]; 
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
-
+ 
             const alertText = cleanText(targetRow[3]);    
-            const alertUrlText = cleanText(targetRow[4]); 
+            const alertUrlText = cleanText(targetRow[4]);
             
             if (emergencyAlert) {
                 if (alertText && alertText !== "") {

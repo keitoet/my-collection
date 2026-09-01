@@ -29,7 +29,7 @@ function loadStatusFromJson() {
                         : `https://github.io{alertUrlText}`;
                     emergencyAlert.innerHTML = `<a href="${fullUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
                 } else {
-                    emergencyAlert.innerText = alertText;
+                    emergencyAlert.innerHTML = alertText;
                 }
                 emergencyAlert.style.display = "block";
             } else {

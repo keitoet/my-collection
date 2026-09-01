@@ -1,7 +1,7 @@
 const ITEMS_PER_PAGE = 12;
 let allItemsData = [];
 
-const SHEET_URL = 'https://google.com';
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI/export?format=csv';
 
 function loadStatusFromJson() {
     const emergencyAlert = document.getElementById('emergencyAlert');
@@ -16,15 +16,21 @@ function loadStatusFromJson() {
             const lines = csvText.split('\n').map(line => line.split(','));
             if (!lines || lines.length < 3) return;
             
+            // 💡 慧斗くんが成功させた「lines[2]」の正しい部屋指定をそのまま移植しました！
             const targetRow = lines[2]; 
             const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
 
+            // 💡 成功したマス目（3番目と4番目）を正確に狙い撃ちします
             const alertText = cleanText(targetRow[3]);    
             const alertUrlText = cleanText(targetRow[4]); 
 
             if (alertText && alertText !== "") {
+                // 💡 図鑑は別ページなので、メインサイトのURL（https://github.io）を頭に自動でくっつけて日記に飛べるようにガードします
                 if (alertUrlText) {
-                    emergencyAlert.innerHTML = `<a href="${alertUrlText}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
+                    const fullUrl = alertUrlText.startsWith('http') 
+                        ? alertUrlText 
+                        : `https://github.io${alertUrlText}`;
+                    emergencyAlert.innerHTML = `<a href="${fullUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
                 } else {
                     emergencyAlert.innerText = alertText;
                 }

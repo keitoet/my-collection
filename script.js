@@ -1,43 +1,23 @@
 const ITEMS_PER_PAGE = 12;
 let allItemsData = [];
 
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1c6iBycArcX-3AwtFvb110x0tv0Zxo3puU09WLRGavUI/export?format=csv';
-
-function loadStatusFromSheet() {
-    const emergencyAlert = document.getElementById('emergencyAlert');
-
-    fetch(SHEET_URL)
-        .then(res => {
-            if (!res.ok) throw new Error('通信エラー');
-            return res.text();
-        })
-        .then(csvText => {
-            const lines = csvText.split('\n').map(line => line.split(','));
-            if (!lines || lines.length < 3) return;
-            
-            const targetRow = lines[2]; 
-            const cleanText = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
-
-            const alertText = cleanText(targetRow[3]);    
-            const alertUrlText = cleanText(targetRow[4]); 
-
-            if (emergencyAlert) {
-                if (alertText && alertText !== "") {
-                    if (alertUrlText) {
-                        const fullUrl = alertUrlText.startsWith('http') 
-                            ? alertUrlText 
-                            : `https://github.io{alertUrlText}`;
-                        emergencyAlert.innerHTML = `<a href="${fullUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${alertText}</a>`;
-                    } else {
-                        emergencyAlert.innerText = alertText;
-                    }
-                    emergencyAlert.style.display = "block";
+function loadStatusFromJson() {
+    fetch('status.json')
+        .then(response => response.json())
+        .then(data => {
+            const emergencyAlert = document.getElementById('emergencyAlert');
+            if (emergencyAlert && data.alert && data.alert.trim() !== "") {
+                if (data.alertUrl) {
+                    emergencyAlert.innerHTML = `<a href="${data.alertUrl}" style="color: inherit; text-decoration: none; display: block; width: 100%; height: 100%;">${data.alert}</a>`;
                 } else {
-                    emergencyAlert.style.display = "none";
+                    emergencyAlert.innerText = data.alert;
                 }
+                emergencyAlert.style.display = "block";
+            } else if (emergencyAlert) {
+                emergencyAlert.style.display = "none";
             }
         })
-        .catch(error => console.error('Error loading status from Sheet:', error));
+        .catch(error => console.error('Error loading status:', error));
 }
 
 function loadSharedComponents() {
@@ -168,7 +148,7 @@ window.closeItemModal = function() {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadSharedComponents();
-    loadStatusFromSheet();
+    loadStatusFromJson();
     loadPicksFromJson();
 
     const modal = document.getElementById('detail-modal');
